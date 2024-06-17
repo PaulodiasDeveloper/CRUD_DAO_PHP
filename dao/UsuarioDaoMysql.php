@@ -4,12 +4,10 @@ require_once 'models/Usuario.php';
 class UsuarioDaoMysql implements UsuarioDAO
 {
     private $pdo;
-
     public function __construct(PDO $driver)
     {
         $this->pdo = $driver;
     }
-
     public function add(Usuario $u)
     {
         $sql = $this->pdo->prepare("INSERT INTO usuarios (nome, email) VALUES (:nome, :email)");
@@ -20,7 +18,6 @@ class UsuarioDaoMysql implements UsuarioDAO
         $u->setId($this->pdo->lastInsertId());
         return $u;
     }
-
     public function findAll()
     {
         $array = [];
@@ -41,7 +38,6 @@ class UsuarioDaoMysql implements UsuarioDAO
 
         return $array;
     }
-
     public function findByEmail($email)
     {
         $sql = $this->pdo->prepare("SELECT * FROM usuarios WHERE email = :email");
@@ -87,8 +83,10 @@ class UsuarioDaoMysql implements UsuarioDAO
 
         return true;
     }
-    function delete(Usuario $id)
+    public function delete($id)
     {
-
+        $sql = $this->pdo->prepare("DELETE FROM usuarios WHERE id = :id");
+        $sql->bindValue(':id', $id);
+        $sql->execute();
     }
 }
